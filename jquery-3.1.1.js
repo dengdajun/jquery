@@ -1,14 +1,7 @@
 ( function( global, factory ) {
 	"use strict";
+	//函数内部使用严格模式
 	if ( typeof module === "object" && typeof module.exports === "object" ) {
-
-		// For CommonJS and CommonJS-like environments where a proper `window`
-		// is present, execute the factory and get jQuery.
-		// For environments that do not have a `window` with a `document`
-		// (such as Node.js), expose a factory as module.exports.
-		// This accentuates the need for the creation of a real `window`.
-		// e.g. var jQuery = require("jquery")(window);
-		// See ticket #14549 for more info.
 		module.exports = global.document ?
 			factory( global, true ) :
 			function( w ) {
@@ -21,13 +14,22 @@
 		factory( global );
 	}
 
-// Pass this if window is not defined yet
 } )( typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
+  /*
+   * 先从整体、全局的看，jQuery的源码几乎都在下面的代码中： (function(){ //…… })();
+   *   第一个括号里面是个匿名函数，第二个括号表示马上执行第一个括号里面的代码。
+   *    首先明白，javascript里面是没有命名空间的，要保证你的javascript函数、对象与其他的不冲突，这里用了javascript的一个技巧：
+   *   你的所有javascript函数、对象都在一个匿名函数里面定义，确保了所定义的函数、对象的有效范围，起到了命名空间的作用。
+   *   既然作用范围在这个匿名函数中，怎么被别人使用呢?
+   */
+/*
+ * 
+ * 下面看它的下面代码： var jQuery = window.jQuery = function(selector, context) { //…… }; 
+ * 这里让jQuery库中最重要的对象jQuery成为了window对象的一个属性，这样就可以在其他地方像使用document(document也是window的一个属性)一样使用jQuery了。
+ *也许使用过jQuery的朋友惊讶－我没有使用jQuery对象，一直使用$的。
+ *没错，那是jQuery的同名对象： window.$ = jQuery; 现在明白了吧。
+ * */
 
-// Edge <= 12 - 13+, Firefox <=18 - 45+, IE 10 - 11, Safari 5.1 - 9+, iOS 6 - 9.1
-// throw exceptions when non-strict code (e.g., ASP.NET 4.5) accesses strict mode
-// arguments.callee.caller (trac-13335). But as of jQuery 3.0 (2016), strict mode should be common
-// enough that all such attempts are guarded in a try block.
 "use strict";
 
 var arr = [];
